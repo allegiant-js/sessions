@@ -1,0 +1,35 @@
+{
+    "name": "@allegiant/sessions",
+    "version": "0.0.5",
+    "description": "Simple sessions module for the allegiant app framework.",
+    "author": "echopoint <echopoint@tutanota.com>",
+    "contributors": [],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/allegiant-js/sessions/issues"
+    },
+    "homepage": "https://github.com/allegiant-js/sessions#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/allegiant-js/sessions.git"
+    },
+    "main": "index.js",
+    "engine": {
+        "node": "> 7.6"
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "test": "tap test/*.js",
+        "coverage": "tap test/*.js --coverage"
+    },
+    "dependencies": {
+        "@allegiant/common": "0.0.5",
+        "@allegiant/cookies": "0.0.5",
+        "@allegiant/jsonstore": "0.0.5"
+    },
+    "devDependencies": {
+        "eslint": "^4.12.1",
+        "jsdoc": "^3.5.5",
+        "tap": "^11.0.1"
+    }
+}
