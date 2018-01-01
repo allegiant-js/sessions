@@ -17,11 +17,14 @@ npm install @allegiant/sessions --save
 ## Usage
 
 ```js
-const Session = require('@allegiant/sessions');
 const App = require('@allegiant/core');
 
-let server = App.create('http://localhost:7000');
-Session.configure(server); // will by default configure needed sesion defaults
+let server = App.create("https://localhost:7000", { 
+    '@allegiant/sessions': {
+        enabled: true,
+        path: path.resolve(path.join(process.cwd(), 'sessions')),
+    }
+});
 server.get('/', function() {
     if(this.session.data.firstTimeServed) {
       this.session.data.firstTimeServed = new Date()
