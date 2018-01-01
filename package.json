@@ -1,6 +1,6 @@
 {
     "name": "@allegiant/sessions",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Simple sessions module for the allegiant app framework.",
     "author": "echopoint <echopoint@tutanota.com>",
     "contributors": [],

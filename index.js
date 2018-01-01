@@ -6,21 +6,23 @@ const Storable = Storage.Storable;
 const expect = common.expect;
 
 class Session extends Storable {
-    constructor(store, name, secure, updateExpiry, conn) {
+    constructor(store, name, secure, updateExpiry, autoStart, conn) {
         super(store, false);
 
         // these three properties are set on construction only
         this._secure = secure;
         this._updateExpiry = updateExpiry;
-        this.name = this._secure ? name + 'TLS' : name;
+        this._conn = conn;
+        this.name = name;
 
-        this.start(conn);
+        if (autoStart)
+            this.start();
     }
 
     static hasExpired(data) {
         var now = new Date(),
             expired = new Date(data.expires);
-            
+
         return (expired.getTime() - now.getTime() <= 0);
     }
 
@@ -48,12 +50,12 @@ class Session extends Storable {
         this._expiry = expiry;
     }
 
-    async start(conn) {
+    async start() {
         if (this.store === false)
             throw new Error("Session store not defined");
 
         var regen = true;
-        var id = conn.cookies.get(this.name); 
+        var id = this._conn.cookies.get(this.name); 
 
         if (id !== null) {
             var data = this.store.get(id);
@@ -72,7 +74,7 @@ class Session extends Storable {
             // defaulting to one hour to check pruning
             this.reset(super._genUniqueId(), true, {}, common.getFutureMs(common.MSONEHOUR));
 
-            conn.cookies.set(this.name, {
+            this._conn.cookies.set(this.name, {
                 value: this._id,
                 path: '/',
                 expires: this._expiry.toUTCString(),
@@ -93,15 +95,21 @@ class Session extends Storable {
         });
     }
 
-    async invalidate(conn) {
+    async invalidate() {
         if (!await super.destroy())
             return;
 
-        conn.cookies.expire(this.name, { httpOnly: true, secure: this._secure });
+        this._conn.cookies.expire(this.name, { httpOnly: true, secure: this._secure });
 
         this._expiry = null;
         this._secure = null;
+        this._conn = null;
         this.name = null;
+    }
+    
+    async regen() {
+        await this.invalidate();
+        await this.start();
     }
 }
 
@@ -114,10 +122,11 @@ Session.Configure = function(app, options={}) {
     config.secure  = app.secure && expect(options.secure, false);
     config.store   = expect(options.store, config.enabled) ? new JSONStore(Session, config.path, true) : false;
     config.updateExpiry = expect(options.updateExpiry, true);
-    config.name    = expect(options.name, 'SESS');
+    config.autoStart = expect(options.autoStart, true);    
+    config.name    = expect(options.name, 'id');
 
     if (config.enabled) {
-        config.Session = Session.bind(null, config.store, config.name, config.secure, config.updateExpiry);
+        config.Session = Session.bind(null, config.store, config.name, config.secure, config.updateExpiry, config.autoStart);
 
         config.bind = function(app) {
             app.on('serve', async function(conn) {
