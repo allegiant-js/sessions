@@ -14,6 +14,25 @@
 npm install @allegiant/sessions --save
 ```
 
+## Usage
+
+```js
+const Session = require('@allegiant/sessions');
+const App = require('@allegiant/core');
+
+let server = App.create('http://localhost:7000');
+Session.configure(server); // will by default configure needed sesion defaults
+server.get('/', function() {
+    if(this.session.data.firstTimeServed) {
+      this.session.data.firstTimeServed = new Date()
+    }
+    this.content = `<h1>It just works! You first looked at this content on ${this.session.data.firstTimeServed}</h1>`;
+    return 200;
+})
+.start();
+```
+
+
 ### Copyright & License
 
 Copyright &copy; 2017 Allegiant. Distributed under the terms of the MIT License, see [LICENSE](https://github.com/allegiant-js/sessions/blob/master/LICENSE)
