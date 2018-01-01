@@ -122,7 +122,7 @@ Session.Configure = function(app, options={}) {
     config.secure  = app.secure && expect(options.secure, false);
     config.store   = expect(options.store, config.enabled) ? new JSONStore(Session, config.path, true) : false;
     config.updateExpiry = expect(options.updateExpiry, true);
-    config.autoStart = expect(options.autoStart, true);    
+    config.autoStart = expect(options.autoStart, false);
     config.name    = expect(options.name, 'id');
 
     if (config.enabled) {
