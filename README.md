@@ -23,7 +23,7 @@ let server = App.create("https://localhost:7000", {
     '@allegiant/sessions': {
         enabled: true,
         path: path.resolve(path.join(process.cwd(), 'sessions')),
-		autoStart: true
+        autoStart: true
     }
 });
 server.get('/', function() {
