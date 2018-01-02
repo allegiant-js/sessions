@@ -23,11 +23,11 @@ let server = App.create("https://localhost:7000", {
     '@allegiant/sessions': {
         enabled: true,
         path: path.resolve(path.join(process.cwd(), 'sessions')),
-        autoStart: true
+        autogen: true
     }
 });
 server.get('/', function() {
-    if(this.session.data.firstTimeServed) {
+    if (!this.session.data.firstTimeServed) {
       this.session.data.firstTimeServed = new Date()
     }
     this.content = `<h1>It just works! You first looked at this content on ${this.session.data.firstTimeServed}</h1>`;

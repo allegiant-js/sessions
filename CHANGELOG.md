@@ -1,3 +1,14 @@
+# 0.0.8 (1/2/2018) @echopoint
+
+- API Changes:
+    *changed autoStart to autogen to be clear of intention. Specifies whether or not to fully generate a new session if one doesn't already exist.
+    *sessions are automatically restarted only if they already exist on the client.
+    +started property added and applied to current functionality
+
+# 0.0.7 (1/1/2018) @gabrielcsapo 
+
+- Updated usage information and example
+
 # 0.0.6 (1/1/2018) @echopoint
 
 - Removed additional TLS specific naming
